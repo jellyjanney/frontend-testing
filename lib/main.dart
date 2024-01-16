@@ -48,102 +48,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Book Club')),
-      body: LayoutBuilder(builder: (context, constraints) {
-        if (constraints.maxWidth > 992) {
-          // Tablet or larger screen
-          return RenderToTablet();
-        } else {
-          // Phone screen
-          return RenderToPhone();
-        }
-      }),
-    );
-  }
-}
-
-class RenderToTablet extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image(
-                  image: AssetImage("assets/images/logo-book-club.png"),
-                  width: MediaQuery.of(context).size.height * 0.5,
-                ),
-                SizedBox(height: 18),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegisterScreen()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                        minimumSize: Size(double.infinity, 48),
-                      ),
-                      child: Text(
-                        'REGISTER',
-                        style: TextStyle(
-                          color: Colors.amber[50],
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                        minimumSize: Size(double.infinity, 48),
-                      ),
-                      child: Text(
-                        'LOGIN',
-                        style: TextStyle(
-                          color: Colors.amber[50],
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class RenderToPhone extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Padding(
+        padding: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 0),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image(
             image: AssetImage("assets/images/logo-book-club.png"),
@@ -224,7 +130,7 @@ class LoginScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SuccessPage()),
+                  MaterialPageRoute(builder: (context) => DashboardPage()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -256,7 +162,7 @@ class LoginScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SuccessPage()),
+                      MaterialPageRoute(builder: (context) => DashboardPage()),
                     );
                   },
                   icon: Icon(Icons.facebook, size: 24),
@@ -270,7 +176,7 @@ class LoginScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SuccessPage()),
+                      MaterialPageRoute(builder: (context) => DashboardPage()),
                     );
                   },
                   icon: Icon(Icons.g_mobiledata_sharp, size: 24),
@@ -301,7 +207,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('REGISTER - Step ${currentStep + 1} /4')),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(children: [
           Stepper(
@@ -314,7 +220,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               } else {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SuccessPage()),
+                  MaterialPageRoute(builder: (context) => DashboardPage()),
                 );
               }
             },
@@ -417,9 +323,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 15, horizontal: 10))),
                     SizedBox(height: 16),
-                    Text('Phone Number'),
-                    TextField(),
-                    SizedBox(height: 16),
                   ],
                 ),
               ),
@@ -459,6 +362,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextField(),
                     SizedBox(height: 16),
                     Text('Zip Code'),
+                    TextField(),
+                    SizedBox(height: 16),
+                    Text('Phone Number'),
                     TextField(),
                     SizedBox(height: 16),
                   ],
@@ -520,7 +426,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 }
 
-class SuccessPage extends StatelessWidget {
+class DashboardPage extends StatelessWidget {
   int _currentIndex = 0;
 
   @override
@@ -530,8 +436,18 @@ class SuccessPage extends StatelessWidget {
         scrolledUnderElevation: 4.0,
         shadowColor: Theme.of(context).shadowColor,
         title: Text("Book Club"),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.menu),
+            tooltip: 'Show Snackbar',
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('This is a snackbar')));
+            },
+          ),
+        ],
       ),
-      body: Container(
+      body: SingleChildScrollView(
         child: Center(
           child: Image(image: AssetImage("assets/images/banner-success.png")),
         ),
@@ -553,7 +469,7 @@ class SuccessPage extends StatelessWidget {
             label: 'BookShelf',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.shopping_cart),
             label: 'My Account',
           ),
         ],
